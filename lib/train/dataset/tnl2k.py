@@ -41,7 +41,7 @@ class TNL2k(BaseVideoDataset):
     def _build_sequence_list(self, vid_ids=None, split=None):
         assert split == 'train'
         if split == 'train':
-            split_name = 'TNL2K_train_subset'
+            split_name = 'TNL2K_train'
         self.dataset_split_path = os.path.join(self.root, split_name)
 
         # ltr_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
@@ -54,7 +54,7 @@ class TNL2k(BaseVideoDataset):
                 sequence_list.remove(sequence)
                 continue
 
-            imgs = sorted(os.listdir(os.path.join(self.dataset_split_path, sequence, 'imgs')))
+            imgs = sorted(os.listdir(os.path.join(self.dataset_split_path, sequence, 'frames')))
             seq_imgs[sequence] = imgs
         self.seq_imgs = seq_imgs
 
@@ -128,7 +128,7 @@ class TNL2k(BaseVideoDataset):
         return {'bbox': bbox, 'valid': valid, 'visible': torch.torch.ByteTensor(visible)}
 
     def _get_frame_path(self, seq_name, frame_id):
-        img_path = os.path.join(self.dataset_split_path, seq_name, 'imgs', self.seq_imgs[seq_name][frame_id])
+        img_path = os.path.join(self.dataset_split_path, seq_name, 'frames', self.seq_imgs[seq_name][frame_id])
         # print(img_path)
 
         return img_path

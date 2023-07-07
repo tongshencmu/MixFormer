@@ -15,17 +15,17 @@ davis_palette[:22, :] = [[0, 0, 0], [128, 0, 0], [0, 128, 0], [128, 128, 0],
 def default_image_loader(path):
     """The default image loader, reads the image from the given path. It first tries to use the jpeg4py_loader,
     but reverts to the opencv_loader if the former is not available."""
-    if default_image_loader.use_jpeg4py is None:
-        # Try using jpeg4py
-        im = jpeg4py_loader(path)
-        if im is None:
-            default_image_loader.use_jpeg4py = False
-            print('Using opencv_loader instead.')
-        else:
-            default_image_loader.use_jpeg4py = True
-            return im
-    if default_image_loader.use_jpeg4py:
-        return jpeg4py_loader(path)
+    # if default_image_loader.use_jpeg4py is None:
+    #     # Try using jpeg4py
+    #     im = jpeg4py_loader(path)
+    #     if im is None:
+    #         default_image_loader.use_jpeg4py = False
+    #         print('Using opencv_loader instead.')
+    #     else:
+    #         default_image_loader.use_jpeg4py = True
+    #         return im
+    # if default_image_loader.use_jpeg4py:
+    #     return jpeg4py_loader(path)
     return opencv_loader(path)
 
 default_image_loader.use_jpeg4py = None

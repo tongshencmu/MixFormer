@@ -80,7 +80,7 @@ def main():
     parser.add_argument('--script', type=str, required=True, help='Name of the train script.')
     parser.add_argument('--config', type=str, required=True, help="Name of the config file.")
     parser.add_argument('--cudnn_benchmark', type=bool, default=True, help='Set cudnn benchmark on (1) or off (0) (default is on).')
-    parser.add_argument('--local_rank', default=-1, type=int, help='node rank for distributed training')
+    # parser.add_argument('--local_rank', default=-1, type=int, help='node rank for distributed training')
     parser.add_argument('--save_dir', type=str, help='the directory to save checkpoints and logs')
     parser.add_argument('--seed', type=int, default=42, help='seed for random numbers')
     parser.add_argument('--use_lmdb', type=int, choices=[0, 1], default=0)  # whether datasets are in lmdb format
@@ -93,13 +93,18 @@ def main():
     parser.add_argument('--stage1_model', type=str, default=None, help='stage1 model used to train SPM.')
 
     args = parser.parse_args()
-    if args.local_rank != -1:
+    try: 
+        local_rank = int(os.environ["LOCAL_RANK"])
+    except:
+        local_rank = -1
+    
+    if local_rank != -1:
         dist.init_process_group(backend='nccl')
-        torch.cuda.set_device(args.local_rank)
+        torch.cuda.set_device(local_rank)
     else:
         torch.cuda.set_device(0)
     run_training(args.script, args.config, cudnn_benchmark=args.cudnn_benchmark,
-                 local_rank=args.local_rank, save_dir=args.save_dir, base_seed=args.seed,
+                 local_rank=local_rank, save_dir=args.save_dir, base_seed=args.seed,
                  use_lmdb=args.use_lmdb, script_name_prv=args.script_prv, config_name_prv=args.config_prv,
                  distill=args.distill, script_teacher=args.script_teacher, config_teacher=args.config_teacher,
                  stage1_model=args.stage1_model)

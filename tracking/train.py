@@ -15,7 +15,7 @@ def parse_args():
     parser.add_argument('--mode', type=str, choices=["single", "multiple"], default="multiple",
                         help="train on single gpu or multiple gpus")
     parser.add_argument('--nproc_per_node', type=int, help="number of GPUs per node")  # specify when mode is multiple
-    parser.add_argument('--master_port', type=int, help="master port", default=26500)
+    parser.add_argument('--master_port', type=int, help="master port", default=29500)
     parser.add_argument('--use_lmdb', type=int, choices=[0, 1], default=0)  # whether datasets are in lmdb format
     parser.add_argument('--script_prv', type=str, help='training script name')
     parser.add_argument('--config_prv', type=str, default='baseline', help='yaml configure file name')

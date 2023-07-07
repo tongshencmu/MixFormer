@@ -64,12 +64,12 @@ class Attention(nn.Module):
         attn = (q_mt @ k_mt.transpose(-2, -1)) * self.scale
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
-        x_mt = (attn @ v_mt).transpose(1, 2).reshape(B, t_h*t_w*2, C)
+        x_mt = (attn @ v_mt).transpose(1, 2).contiguous().reshape(B, t_h*t_w*2, C)
 
         attn = (q_s @ k.transpose(-2, -1)) * self.scale
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
-        x_s = (attn @ v).transpose(1, 2).reshape(B, s_h*s_w, C)
+        x_s = (attn @ v).transpose(1, 2).contiguous().reshape(B, s_h*s_w, C)
 
         x = torch.cat([x_mt, x_s], dim=1)
         x = self.proj(x)
@@ -78,7 +78,7 @@ class Attention(nn.Module):
 
     def forward_test(self, x, s_h, s_w):
         B, N, C = x.shape
-        qkv_s = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        qkv_s = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).contiguous().permute(2, 0, 3, 1, 4)
         q_s, _, _ = qkv_s.unbind(0)   # make torchscript happy (cannot use tensor as tuple)
         qkv = torch.cat([self.qkv_mem, qkv_s], dim=3)
         _, k, v = qkv.unbind(0)
@@ -86,7 +86,7 @@ class Attention(nn.Module):
         attn = (q_s @ k.transpose(-2, -1)) * self.scale
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
-        x = (attn @ v).transpose(1, 2).reshape(B, s_h*s_w, C)
+        x = (attn @ v).transpose(1, 2).contiguous().reshape(B, s_h*s_w, C)
 
         x = self.proj(x)
         x = self.proj_drop(x)
@@ -207,9 +207,9 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
 
         x_t, x_ot, x_s = torch.split(x, [H_t*W_t, H_t*W_t, H_s*W_s], dim=1)
 
-        x_t_2d = x_t.transpose(1, 2).reshape(B, C, H_t, W_t)
-        x_ot_2d = x_ot.transpose(1, 2).reshape(B, C, H_t, W_t)
-        x_s_2d = x_s.transpose(1, 2).reshape(B, C, H_s, W_s)
+        x_t_2d = x_t.transpose(1, 2).contiguous().reshape(B, C, H_t, W_t)
+        x_ot_2d = x_ot.transpose(1, 2).contiguous().reshape(B, C, H_t, W_t)
+        x_s_2d = x_s.transpose(1, 2).contiguous().reshape(B, C, H_s, W_s)
 
         return x_t_2d, x_ot_2d, x_s_2d
 

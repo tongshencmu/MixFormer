@@ -25,7 +25,9 @@ DATA:
     - LASOT
     - COCO17
     - TRACKINGNET
+    - TNL2k
     DATASETS_RATIO:
+    - 1
     - 1
     - 1
     - 1
