@@ -120,7 +120,6 @@ def build_dataloaders(cfg, settings):
                                                          settings=settings,
                                                          train_score=train_score)
 
-
     dataset_train = sampler.TrackingSampler(datasets=names2datasets(cfg.DATA.TRAIN.DATASETS_NAME, settings, opencv_loader),
                                             p_datasets=cfg.DATA.TRAIN.DATASETS_RATIO,
                                             samples_per_epoch=cfg.DATA.TRAIN.SAMPLE_PER_EPOCH,

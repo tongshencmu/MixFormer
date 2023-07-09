@@ -95,6 +95,12 @@ class TNL2k(BaseVideoDataset):
         bb_anno_file = os.path.join(seq_path, "groundtruth.txt")
         gt = pandas.read_csv(bb_anno_file, delimiter=',', header=None, dtype=np.float32, na_filter=False, low_memory=False).values
         return torch.tensor(gt)
+    
+    def _read_nlp_anno(self, seq_path):
+        nl_anno_file = os.path.join(seq_path, "language.txt")
+        with open(nl_anno_file, "r") as myfile:
+            nlp_data = myfile.read().replace('\n', '')
+        return nlp_data
 
     # def _read_target_visible(self, seq_path):
     #     # Read full occlusion and out_of_view
@@ -124,8 +130,10 @@ class TNL2k(BaseVideoDataset):
         valid = (bbox[:, 2] > 0) & (bbox[:, 3] > 0)
         visible = [True] * len(valid)
         # visible = self._read_target_visible(seq_path) & valid.byte()
+        
+        nlp = self._read_nlp_anno(seq_path)
 
-        return {'bbox': bbox, 'valid': valid, 'visible': torch.torch.ByteTensor(visible)}
+        return {'bbox': bbox, 'valid': valid, 'visible': torch.torch.ByteTensor(visible), 'nlp': nlp}
 
     def _get_frame_path(self, seq_name, frame_id):
         img_path = os.path.join(self.dataset_split_path, seq_name, 'frames', self.seq_imgs[seq_name][frame_id])
@@ -157,7 +165,10 @@ class TNL2k(BaseVideoDataset):
 
         anno_frames = {}
         for key, value in anno.items():
-            anno_frames[key] = [value[f_id, ...].clone() for f_id in frame_ids]
+            if key != 'nlp':
+                anno_frames[key] = [value[f_id, ...].clone() for f_id in frame_ids]
+            else:
+                anno_frames[key] = value
 
         object_meta = OrderedDict({'object_class_name': obj_class,
                                    'motion_class': None,

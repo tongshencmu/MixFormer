@@ -5,6 +5,7 @@ import torch
 
 class MixFormerActor(BaseActor):
     """ Actor for training the TSP_online and TSP_cls_online"""
+
     def __init__(self, net, objective, loss_weight, settings, run_score_head=False):
         super().__init__(net, objective)
         self.loss_weight = loss_weight
@@ -33,17 +34,23 @@ class MixFormerActor(BaseActor):
             try:
                 labels = data['label'].view(-1)  # (batch, ) 0 or 1
             except:
-                raise Exception("Please setting proper labels for score branch.")
+                raise Exception(
+                    "Please setting proper labels for score branch.")
 
         # compute losses
-        loss, status = self.compute_losses(out_dict, gt_bboxes[0], labels=labels)
+        loss, status = self.compute_losses(
+            out_dict, gt_bboxes[0], labels=labels)
 
         return loss, status
 
     def forward_pass(self, data, run_score_head):
         search_bboxes = box_xywh_to_xyxy(data['search_anno'][0].clone())
-        out_dict, _ = self.net(data['template_images'][0], data['template_images'][1], data['search_images'],
-                               run_score_head=run_score_head, gt_bboxes=search_bboxes)
+        if 'nlp' in data:
+            out_dict, _ = self.net(data['template_images'][0], data['template_images'][1], data['search_images'],
+                                   run_score_head=run_score_head, gt_bboxes=search_bboxes, text=data['nlp'])
+        else:
+            out_dict, _ = self.net(data['template_images'][0], data['template_images'][1], data['search_images'],
+                                   run_score_head=run_score_head, gt_bboxes=search_bboxes)
         # out_dict: (B, N, C), outputs_coord: (1, B, N, C), target_query: (1, B, N, C)
         return out_dict
 
@@ -53,8 +60,10 @@ class MixFormerActor(BaseActor):
         if torch.isnan(pred_boxes).any():
             raise ValueError("Network outputs is NAN! Stop Training")
         num_queries = pred_boxes.size(1)
-        pred_boxes_vec = box_cxcywh_to_xyxy(pred_boxes).view(-1, 4)  # (B,N,4) --> (BN,4) (x1,y1,x2,y2)
-        gt_boxes_vec = box_xywh_to_xyxy(gt_bbox)[:, None, :].repeat((1, num_queries, 1)).view(-1, 4).clamp(min=0.0, max=1.0)  # (B,4) --> (B,1,4) --> (B,N,4)
+        # (B,N,4) --> (BN,4) (x1,y1,x2,y2)
+        pred_boxes_vec = box_cxcywh_to_xyxy(pred_boxes).view(-1, 4)
+        gt_boxes_vec = box_xywh_to_xyxy(gt_bbox)[:, None, :].repeat(
+            (1, num_queries, 1)).view(-1, 4).clamp(min=0.0, max=1.0)  # (B,4) --> (B,1,4) --> (B,N,4)
         # compute ciou and iou
         try:
             ciou_loss, iou = self.objective['ciou'](pred_boxes_vec, gt_boxes_vec)  # (BN,4) (BN,4)
@@ -64,7 +73,8 @@ class MixFormerActor(BaseActor):
         l1_loss = self.objective['l1'](pred_boxes_vec, gt_boxes_vec)  # (BN,4) (BN,4)
 
         # weighted sum
-        loss = self.loss_weight['ciou'] * ciou_loss + self.loss_weight['l1'] * l1_loss
+        loss = self.loss_weight['ciou'] * ciou_loss + \
+            self.loss_weight['l1'] * l1_loss
 
         # compute cls loss if neccessary
         if 'pred_scores' in pred_dict:

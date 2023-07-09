@@ -97,8 +97,15 @@ class Lasot(BaseVideoDataset):
 
     def _read_bb_anno(self, seq_path):
         bb_anno_file = os.path.join(seq_path, "groundtruth.txt")
-        gt = pandas.read_csv(bb_anno_file, delimiter=',', header=None, dtype=np.float32, na_filter=False, low_memory=False).values
+        gt = pandas.read_csv(bb_anno_file, delimiter=',', header=None, dtype=np.float32,
+                             na_filter=False, low_memory=False).values
         return torch.tensor(gt)
+    
+    def _read_nlp_anno(self, seq_path):
+        nl_anno_file = os.path.join(seq_path, "nlp.txt")
+        with open(nl_anno_file, "r") as myfile:
+            nlp_data = myfile.read().replace('\n', '')
+        return nlp_data
 
     def _read_target_visible(self, seq_path):
         # Read full occlusion and out_of_view
@@ -127,11 +134,13 @@ class Lasot(BaseVideoDataset):
 
         valid = (bbox[:, 2] > 0) & (bbox[:, 3] > 0)
         visible = self._read_target_visible(seq_path) & valid.byte()
+        
+        nlp = self._read_nlp_anno(seq_path)
 
-        return {'bbox': bbox, 'valid': valid, 'visible': visible}
+        return {'bbox': bbox, 'valid': valid, 'visible': visible, 'nlp': nlp}
 
     def _get_frame_path(self, seq_path, frame_id):
-        return os.path.join(seq_path, 'img', '{:08}.jpg'.format(frame_id+1))    # frames start from 1
+        return os.path.join(seq_path, 'img', '{:08}.jpg'.format(frame_id + 1))    # frames start from 1
 
     def _get_frame(self, seq_path, frame_id):
         return self.image_loader(self._get_frame_path(seq_path, frame_id))
@@ -157,7 +166,10 @@ class Lasot(BaseVideoDataset):
 
         anno_frames = {}
         for key, value in anno.items():
-            anno_frames[key] = [value[f_id, ...].clone() for f_id in frame_ids]
+            if key != 'nlp':
+                anno_frames[key] = [value[f_id, ...].clone() for f_id in frame_ids]
+            else:
+                anno_frames[key] = value
 
         object_meta = OrderedDict({'object_class_name': obj_class,
                                    'motion_class': None,

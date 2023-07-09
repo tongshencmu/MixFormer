@@ -8,14 +8,16 @@ from lib.train.trainers import LTRTrainer
 # distributed training related
 from torch.nn.parallel import DistributedDataParallel as DDP
 # some more advanced functions
-from .base_functions import *
+from .base_functions import get_optimizer_scheduler, build_dataloaders, update_settings
 # network related
 from lib.models.mixformer_cvt import build_mixformer_cvt, build_mixformer_cvt_online_score
 from lib.models.mixformer_vit import build_mixformer_vit, build_mixformer_vit_online_score
 from lib.models.mixformer_convmae import build_mixformer_convmae, build_mixformer_convmae_online_score
+from lib.models.clip_vit import build_clip_vit, build_clip_vit_nlp
 # forward propagation related
 from lib.train.actors import MixFormerActor
 # for import modules
+import torch
 import importlib
 
 
@@ -67,6 +69,10 @@ def run(settings):
         net = build_mixformer_convmae(cfg)
     elif settings.script_name == "mixformer_convmae_online":
         net = build_mixformer_convmae_online_score(cfg, settings)
+    elif settings.script_name == "clip_vit":
+        net = build_clip_vit(cfg)
+    elif settings.script_name == "clip_vit_nlp":
+        net = build_clip_vit_nlp(cfg)
     else:
         raise ValueError("illegal script name")
 
@@ -82,7 +88,7 @@ def run(settings):
     settings.distill_loss_type = getattr(cfg.TRAIN, "DISTILL_LOSS_TYPE", "KL")
     # settings.save_every_epoch = True
     # Loss functions and Actors
-    if settings.script_name in ["mixformer_cvt", "mixformer_vit", "mixformer_convmae"]:
+    if settings.script_name in ["mixformer_cvt", "mixformer_vit", "mixformer_convmae", 'clip_vit', 'clip_vit_nlp']:
         objective = {'ciou': ciou_loss, 'l1': l1_loss}
         loss_weight = {'ciou': cfg.TRAIN.IOU_WEIGHT, 'l1': cfg.TRAIN.L1_WEIGHT}
         actor = MixFormerActor(net=net, objective=objective, loss_weight=loss_weight, settings=settings)
