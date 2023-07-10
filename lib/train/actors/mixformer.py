@@ -45,7 +45,7 @@ class MixFormerActor(BaseActor):
 
     def forward_pass(self, data, run_score_head):
         search_bboxes = box_xywh_to_xyxy(data['search_anno'][0].clone())
-        if 'nlp' in data:
+        if 'nlp' in data and hasattr(self.net, 'text_encoder'):
             out_dict, _ = self.net(data['template_images'][0], data['template_images'][1], data['search_images'],
                                    run_score_head=run_score_head, gt_bboxes=search_bboxes, text=data['nlp'])
         else:

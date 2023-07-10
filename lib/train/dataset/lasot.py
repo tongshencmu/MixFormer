@@ -102,8 +102,8 @@ class Lasot(BaseVideoDataset):
         return torch.tensor(gt)
     
     def _read_nlp_anno(self, seq_path):
-        nl_anno_file = os.path.join(seq_path, "nlp.txt")
-        with open(nl_anno_file, "r") as myfile:
+        nlp_anno_file = os.path.join(seq_path, "nlp.txt")
+        with open(nlp_anno_file, "r") as myfile:
             nlp_data = myfile.read().replace('\n', '')
         return nlp_data
 

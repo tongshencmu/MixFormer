@@ -36,6 +36,10 @@ class LaSOTDataset(BaseDataset):
         anno_path = '{}/{}/{}/groundtruth.txt'.format(self.base_path, class_name, sequence_name)
 
         ground_truth_rect = load_text(str(anno_path), delimiter=',', dtype=np.float64)
+        
+        nlp_anno_file = '{}/{}/{}/nlp.txt'.format(self.base_path, class_name, sequence_name)
+        with open(nlp_anno_file, "r") as myfile:
+            nlp_data = myfile.read().replace('\n', '')
 
         occlusion_label_path = '{}/{}/{}/full_occlusion.txt'.format(self.base_path, class_name, sequence_name)
 
@@ -53,7 +57,7 @@ class LaSOTDataset(BaseDataset):
 
         target_class = class_name
         return Sequence(sequence_name, frames_list, 'lasot', ground_truth_rect.reshape(-1, 4),
-                        object_class=target_class, target_visible=target_visible)
+                        object_class=target_class, target_visible=target_visible, nlp=nlp_data)
 
     def __len__(self):
         return len(self.sequence_list)
