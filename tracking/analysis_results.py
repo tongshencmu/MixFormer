@@ -17,6 +17,7 @@ trackers = []
 # trackers.extend(trackerlist(name='stark_st', parameter_name='baseline_R101', dataset_name=dataset_name,
 #                             run_ids=None, display_name='STARK-ST101'))
 parser = argparse.ArgumentParser(description='Run tracker on sequence or dataset.')
+parser.add_argument('--tracker_name', type=str, help='Name of config file.')
 parser.add_argument('--tracker_param', type=str, help='Name of config file.')
 parser.add_argument('--dataset_name', type=str, help='Name of config file.')
 # parser.add_argument('--run_ids', type=str, help='Name of config file.')
@@ -30,8 +31,8 @@ dataset_name = args.dataset_name
 #                             run_ids=None, display_name='MixFormerOnline'))
 # trackers.extend(trackerlist(name='mixformer_vit_online', parameter_name=args.tracker_param, dataset_name=args.dataset_name,
 #                             run_ids=None, display_name='MixFormerOnline'))
-trackers.extend(trackerlist(name='mixformer_convmae_online', parameter_name=args.tracker_param, dataset_name=args.dataset_name,
-                            run_ids=None, display_name='MixFormerOnline'))
+trackers.extend(trackerlist(name=args.tracker_name, parameter_name=args.tracker_param, dataset_name=args.dataset_name,
+                            run_ids=None, display_name=args.tracker_name))
 """TransT"""
 # trackers.extend(trackerlist(name='TransT_N2', parameter_name=None, dataset_name=None,
 #                             run_ids=None, display_name='TransT_N2', result_only=True))
