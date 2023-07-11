@@ -6,27 +6,27 @@ def local_env_settings():
     # Set your local paths here.
 
     settings.davis_dir = ''
-    settings.got10k_lmdb_path = '/ocean/projects/ele220002p/tongshen/dataset/got10k_lmdb'
-    settings.got10k_path = '/ocean/projects/ele220002p/tongshen/dataset/got10k'
+    settings.got10k_lmdb_path = '/got10k_lmdb'
+    settings.got10k_path = '/tracking_data/got10k/'
     settings.got_packed_results_path = ''
     settings.got_reports_path = ''
-    settings.lasot_lmdb_path = '/ocean/projects/ele220002p/tongshen/dataset/lasot_lmdb'
-    settings.lasot_path = '/ocean/projects/ele220002p/tongshen/dataset/lasot_new/LaSOTBenchmark'
-    settings.network_path = '/ocean/projects/ele220002p/tongshen/code/vl_tracking/MixFormer/work_dirs/test/networks'    # Where tracking networks are stored.
-    settings.nfs_path = '/ocean/projects/ele220002p/tongshen/dataset/nfs'
-    settings.otb_path = '/ocean/projects/ele220002p/tongshen/dataset/OTB2015'
-    settings.prj_dir = '/ocean/projects/ele220002p/tongshen/code/vl_tracking/MixFormer/work_dirs'
-    settings.result_plot_path = '/ocean/projects/ele220002p/tongshen/code/vl_tracking/MixFormer/work_dirs/test/result_plots'
-    settings.results_path = '/ocean/projects/ele220002p/tongshen/code/vl_tracking/MixFormer/work_dirs/test/tracking_results'    # Where to store tracking results
-    settings.save_dir = '/ocean/projects/ele220002p/tongshen/code/vl_tracking/MixFormer/work_dirs'
-    settings.segmentation_path = '/ocean/projects/ele220002p/tongshen/code/vl_tracking/MixFormer/work_dirs/test/segmentation_results'
-    settings.tc128_path = '/ocean/projects/ele220002p/tongshen/dataset/TC128'
+    settings.lasot_lmdb_path = '/lasot_lmdb'
+    settings.lasot_path = '/lasot/LaSOT/LaSOT_benchmark'
+    settings.network_path = '/raid/Mixformer/work_dirs/test/networks'    # Where tracking networks are stored.
+    settings.nfs_path = '/nfs'
+    settings.otb_path = '/OTB2015'
+    settings.prj_dir = '/raid/Mixformer/work_dirs'
+    settings.result_plot_path = '/raid/Mixformer/work_dirs/test/result_plots'
+    settings.results_path = '/raid/Mixformer/work_dirs/test/tracking_results'    # Where to store tracking results
+    settings.save_dir = '/raid/Mixformer/work_dirs'
+    settings.segmentation_path = '/raid/Mixformer/work_dirs/test/segmentation_results'
+    settings.tc128_path = '/TC128'
     settings.tn_packed_results_path = ''
-    settings.tnl2k_path = '/ocean/projects/ele220002p/tongshen/dataset/tnl2k'
+    settings.tnl2k_path = '/tracking_data/tnl2k/'
     settings.tpl_path = ''
-    settings.trackingnet_path = '/ocean/projects/ele220002p/tongshen/dataset/trackingNet'
-    settings.uav_path = '/ocean/projects/ele220002p/tongshen/dataset/UAV123'
-    settings.vot_path = '/ocean/projects/ele220002p/tongshen/dataset/VOT2019'
+    settings.trackingnet_path = '/tracking_data/trackingnet/'
+    settings.uav_path = '/UAV123'
+    settings.vot_path = '/VOT2019'
     settings.youtubevos_dir = ''
 
     return settings

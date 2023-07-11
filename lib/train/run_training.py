@@ -13,6 +13,9 @@ torch.backends.cudnn.benchmark = False
 import _init_paths
 import lib.train.admin.settings as ws_settings
 
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, message='TypedStorage is deprecated')
+
 
 def init_seeds(seed):
     random.seed(seed)

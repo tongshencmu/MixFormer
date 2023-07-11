@@ -1,8 +1,8 @@
 import argparse
 import os
 import _init_paths
-from lib.train.admin import create_default_local_file_ITP_train
-from lib.test.evaluation import create_default_local_file_ITP_test
+from lib.train.admin import create_default_local_file_ITP_train_ngc
+from lib.test.evaluation import create_default_local_file_ITP_test_ngc
 
 
 def parse_args():
@@ -19,5 +19,5 @@ if __name__ == "__main__":
     workspace_dir = os.path.realpath(args.workspace_dir)
     data_dir = os.path.realpath(args.data_dir)
     save_dir = os.path.realpath(args.save_dir)
-    create_default_local_file_ITP_train(workspace_dir, data_dir)
-    create_default_local_file_ITP_test(workspace_dir, data_dir, save_dir)
+    create_default_local_file_ITP_train_ngc(workspace_dir, data_dir)
+    create_default_local_file_ITP_test_ngc(workspace_dir, data_dir, save_dir)

@@ -119,12 +119,12 @@ class EnvSettings_ITP_NGC:
         self.tc128_path = os.path.join(data_dir, 'TC128')
         self.tpl_path = ''
         self.vot_path = os.path.join(data_dir, 'VOT2019')
-        self.got10k_path = os.path.join(data_dir, 'got10k')
+        self.got10k_path = os.path.join(data_dir, 'tracking_data/got10k/')
         self.got10k_lmdb_path = os.path.join(data_dir, 'got10k_lmdb')
-        self.lasot_path = os.path.join(data_dir, 'lasot_new/LaSOTBenchmark')
+        self.lasot_path = os.path.join(data_dir, '/lasot/LaSOT/LaSOT_benchmark')
         self.lasot_lmdb_path = os.path.join(data_dir, 'lasot_lmdb')
-        self.trackingnet_path = os.path.join(data_dir, 'trackingNet')
-        self.tnl2k_path = os.path.join(data_dir, 'tnl2k')
+        self.trackingnet_path = os.path.join(data_dir, 'tracking_data/trackingnet/')
+        self.tnl2k_path = os.path.join(data_dir, 'tracking_data/tnl2k/')
         self.davis_dir = ''
         self.youtubevos_dir = ''
 
