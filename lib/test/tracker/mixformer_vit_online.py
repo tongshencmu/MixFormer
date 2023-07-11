@@ -122,6 +122,7 @@ class MixFormerOnline(BaseTracker):
 
             if self.online_size > 1:
                 with torch.no_grad():
+                    # BNCH, 2BCWH
                     self.network.set_online(self.template, self.online_template)
 
             self.max_pred_score = -1

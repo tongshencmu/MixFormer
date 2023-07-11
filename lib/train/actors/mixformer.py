@@ -6,12 +6,13 @@ import torch
 class MixFormerActor(BaseActor):
     """ Actor for training the TSP_online and TSP_cls_online"""
 
-    def __init__(self, net, objective, loss_weight, settings, run_score_head=False):
+    def __init__(self, net, objective, loss_weight, settings, nlp=False, run_score_head=False):
         super().__init__(net, objective)
         self.loss_weight = loss_weight
         self.settings = settings
         self.bs = self.settings.batchsize  # batch size
         self.run_score_head = run_score_head
+        self.nlp = nlp
 
     def __call__(self, data):
         """
@@ -45,7 +46,7 @@ class MixFormerActor(BaseActor):
 
     def forward_pass(self, data, run_score_head):
         search_bboxes = box_xywh_to_xyxy(data['search_anno'][0].clone())
-        if 'nlp' in data and hasattr(self.net, 'text_encoder'):
+        if self.nlp:
             out_dict, _ = self.net(data['template_images'][0], data['template_images'][1], data['search_images'],
                                    run_score_head=run_score_head, gt_bboxes=search_bboxes, text=data['nlp'])
         else:

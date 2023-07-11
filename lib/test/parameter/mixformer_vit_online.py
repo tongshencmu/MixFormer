@@ -9,7 +9,7 @@ def parameters(yaml_name: str, model=None, search_area_scale=None):
     prj_dir = env_settings().prj_dir
     save_dir = env_settings().save_dir
     # update default config from yaml file
-    yaml_file = os.path.join(prj_dir, 'experiments/mixformer_vit_online/%s.yaml' % yaml_name)
+    yaml_file = os.path.join(prj_dir, '../experiments/mixformer_vit_online/%s.yaml' % yaml_name)
     update_config_from_file(yaml_file)
     params.cfg = cfg
     print("test config: ", cfg)
@@ -28,7 +28,7 @@ def parameters(yaml_name: str, model=None, search_area_scale=None):
     if model is None:
         raise NotImplementedError("Please set proper model to test.")
     else:
-        params.checkpoint = os.path.join(save_dir, "models/%s" % model)
+        params.checkpoint = os.path.join(save_dir, "../%s" % model)
 
     # whether to save boxes from all queries
     params.save_all_boxes = False

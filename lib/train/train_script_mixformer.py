@@ -88,7 +88,7 @@ def run(settings):
     settings.distill_loss_type = getattr(cfg.TRAIN, "DISTILL_LOSS_TYPE", "KL")
     # settings.save_every_epoch = True
     # Loss functions and Actors
-    if settings.script_name in ["mixformer_cvt", "mixformer_vit", "mixformer_convmae", 'clip_vit', 'clip_vit_nlp']:
+    if settings.script_name in ["mixformer_cvt", "mixformer_vit", "mixformer_convmae"]:
         objective = {'ciou': ciou_loss, 'l1': l1_loss}
         loss_weight = {'ciou': cfg.TRAIN.IOU_WEIGHT, 'l1': cfg.TRAIN.L1_WEIGHT}
         actor = MixFormerActor(net=net, objective=objective, loss_weight=loss_weight, settings=settings)
@@ -96,6 +96,10 @@ def run(settings):
         objective = {'ciou': ciou_loss, 'l1': l1_loss, 'score': BCEWithLogitsLoss()}
         loss_weight = {'ciou': cfg.TRAIN.IOU_WEIGHT, 'l1': cfg.TRAIN.L1_WEIGHT, 'score': cfg.TRAIN.SCORE_WEIGHT}
         actor = MixFormerActor(net=net, objective=objective, loss_weight=loss_weight, settings=settings, run_score_head=True)
+    elif settings.script_name in ['clip_vit', 'clip_vit_nlp']:
+        objective = {'ciou': ciou_loss, 'l1': l1_loss}
+        loss_weight = {'ciou': cfg.TRAIN.IOU_WEIGHT, 'l1': cfg.TRAIN.L1_WEIGHT}
+        actor = MixFormerActor(net=net, objective=objective, loss_weight=loss_weight, nlp=True, settings=settings)
     else:
         raise ValueError("illegal script name")
 
